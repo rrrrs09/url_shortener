@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+  {% verbatim %}
+  <div id="app">
+    <div class="header">
+      <div class="wrapper">
+        <div class="row align-items-center justify-content-between">
+          <div class="logo col">Simple url shortener</div>
+          <div class="git col text-right"></div>
+        </div>
+      </div>
+    </div>
+    <div class="wrapper">
+
+      <div class="main">
+        <form>
+          <div class="form-group mb-4">
+            <input v-on:input="urlError=null" v-model="longUrl" type="text"
+            class="form-control" :class="{ 'is-invalid': urlError }"
+            placeholder="Вставьте ссылку, которую хотите укоротить">
+            <div class="invalid-feedback">
+              {{ urlError }}
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8">
+              <input v-on:input="slugError=null" v-model="slug" type="text"
+              class="form-control" :class="{ 'is-invalid': slugError }"
+              placeholder="Вы можете использовать своё название для ссылки">
+              <div class="invalid-feedback">
+                {{ slugError }}
+              </div>
+            </div>
+            <div class="col">
+              <button v-on:click="shortenUrl" type="button" class="btn btn-secondary btn-block" >
+                Укоротить
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+
+      <div class="history"></div>
+    </div>
+  </div>
+  {% endverbatim %}
+  <script src="{% static 'main.js' %}"></script>
+</body>
+</html>

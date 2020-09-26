@@ -1,0 +1,4 @@
+--requirement common.txt
+
+psycopg2-binary==2.8.5
+gunicorn==20.0.4
