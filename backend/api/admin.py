@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import UrlItem, UrlSlug
+from .models import LongUrl, UrlSlug
 
 
-admin.site.register(UrlItem)
+admin.site.register(LongUrl)
 admin.site.register(UrlSlug)

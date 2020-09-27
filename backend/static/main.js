@@ -22,7 +22,7 @@ var vm = new Vue({
             const response = await fetch(baseUrl + '/shorten/', requestOptions);
             if (response.ok) {
                 data = await response.json()
-                this.longUrl = data.data.url
+                this.longUrl = data.url
                 this.slug = null
             } else if (response.status == 422) {
                 error = await response.json()
@@ -34,16 +34,17 @@ var vm = new Vue({
         handleError: function (error){
             console.log(error.error.code)
             switch (error.error.code) {
-                case "urlIsRequired":
+                case "url_is_required":
                     this.urlError = "Поле не должно быть пустым."
                     break;
-                case "invalidUrl":
+                case "invalid_url":
                     this.urlError = "Введен некоректный url."
                     break;
-                case "slugValidation":
-                    this.slugError = "Короткое название может содержать только буквы, цифры и тире."
+                case "invalid_slug":
+                    this.slugError = "Короткое название может содержать только " +
+                        "буквы, цифры нижние подчеркивания или тире и быть не больше 50 символов."
                         break;
-                case "slugAlreadyExists":
+                case "slug_already_exists":
                     this.slugError = "Такое название уже занято."
                     break;
                 default:
