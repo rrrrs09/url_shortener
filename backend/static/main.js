@@ -7,7 +7,8 @@ var vm = new Vue({
         slug: null,
         shortenedUrl: null,
         urlError: null,
-        slugError: null
+        slugError: null,
+        actionHistory: []
     },
     methods: {
         shortenUrl: async function (){
@@ -22,6 +23,11 @@ var vm = new Vue({
             const response = await fetch(baseUrl + '/shorten/', requestOptions);
             if (response.ok) {
                 data = await response.json()
+                urlObject = {
+                    longUrl: this.longUrl,
+                    shortUrl: data.url
+                }
+                this.addToHistory(urlObject)
                 this.longUrl = data.url
                 this.slug = null
             } else if (response.status == 422) {
@@ -32,7 +38,6 @@ var vm = new Vue({
             };
         },
         handleError: function (error){
-            console.log(error.error.code)
             switch (error.error.code) {
                 case "url_is_required":
                     this.urlError = "Поле не должно быть пустым."
@@ -50,6 +55,36 @@ var vm = new Vue({
                 default:
                     break;
             }
+        },
+        addToHistory: function (urlObject){
+            if (!this.actionHistory.some(e => e.longUrl === urlObject.longUrl &&
+                                              e.shortUrl === urlObject.shortUrl)) {
+                this.actionHistory.unshift(urlObject)
+            }
+            localStorage.setItem('history', JSON.stringify(this.actionHistory))
+        },
+        copyUrl: function (event, shortUrl){
+            copytext = document.createElement('input')
+            copytext.value = shortUrl
+            document.body.appendChild(copytext)
+            copytext.select()
+            document.execCommand('copy')
+            document.body.removeChild(copytext)
+
+            copyButton = event.target
+            copyButton.className = "btn btn-secondary"
+            copyButton.innerHTML = "Скопировано"
+            setTimeout(this.changeClass, 1400, copyButton)
+        },
+        changeClass: function (elem) {
+            elem.className = "btn btn-light"
+            elem.innerHTML = "Скопировать"
+        }
+    },
+    beforeMount: function() {
+        userHistory = localStorage.getItem('history')
+        if(userHistory) {
+            this.actionHistory = JSON.parse(userHistory)
         }
     }
 })

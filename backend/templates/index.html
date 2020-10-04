@@ -1,4 +1,4 @@
-{% load static %}
+{% verbatim %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,55 +6,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Url shortener</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="/static/style.css">
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
-  {% verbatim %}
   <div id="app">
     <div class="header">
       <div class="wrapper">
-        <div class="row align-items-center justify-content-between">
-          <div class="logo col">Simple url shortener</div>
-          <div class="git col text-right"></div>
+        <div class="row justify-content-between align-items-center">
+          <h1>Simple url shortener</h1>
+          <a href="https://github.com/rrrrs09/url_shortener">
+            <img id="github-link" src="/static/img/github.png" alt="" >
+          </a>
         </div>
       </div>
     </div>
-    <div class="wrapper">
-
-      <div class="main">
-        <form>
-          <div class="form-group mb-4">
-            <input v-on:input="urlError=null" v-model="longUrl" type="text"
-            class="form-control" :class="{ 'is-invalid': urlError }"
-            placeholder="Вставьте ссылку, которую хотите укоротить">
-            <div class="invalid-feedback">
-              {{ urlError }}
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-8">
-              <input v-on:input="slugError=null" v-model="slug" type="text"
-              class="form-control" :class="{ 'is-invalid': slugError }"
-              placeholder="Вы можете использовать своё название для ссылки">
+    <div class="content">
+      <div class="wrapper">
+        <div class="content-card">
+          <form id="main-form">
+            <div class="form-group mb-4">
+              <input  id="long-url"
+                      v-on:input="urlError=null"
+                      v-model="longUrl"
+                      type="text"
+                      class="form-control"
+                      :class="{ 'is-invalid': urlError }"
+                      placeholder="Вставьте ссылку, которую хотите укоротить">
               <div class="invalid-feedback">
-                {{ slugError }}
+                {{ urlError }}
               </div>
             </div>
-            <div class="col">
-              <button v-on:click="shortenUrl" type="button" class="btn btn-secondary btn-block" >
+            <div class="form-group row">
+              <div class="slug-group">
+                <input  id="slug"
+                        v-on:input="slugError=null"
+                        v-model="slug"
+                        type="text"
+                        class="form-control"
+                        :class="{ 'is-invalid': slugError }"
+                        placeholder="Вы можете использовать своё название для ссылки">
+
+                <div class="invalid-feedback">
+                  {{ slugError }}
+                </div>
+              </div>
+              <button id="shorten-button"
+                      v-on:click="shortenUrl"
+                      type="button"
+                      class="btn btn-secondary btn-block mt-4" >
                 Укоротить
               </button>
             </div>
+          </form>
+        </div>
+
+        <div class="content-card">
+          <div class="history">
+            <h3 class="text-center mb-3">История действий</h3>
+            <ul class="list-group" v-if="actionHistory">
+              <li v-for="item in actionHistory" :key="item.shortUrl" class="list-group-item">
+                <span class="action-url mr-3">{{item.longUrl}}</span>
+                <div>
+                  <span class="action-url mr-3">
+                    <a :href="item.shortUrl" target="_blank">{{item.shortUrl}}</a>
+                  </span>
+                  <span v-on:click="copyUrl($event, item.shortUrl)" class="btn btn-light">
+                    Скопировать
+                  </span>
+                </div>
+              </li>
+            </ul>
           </div>
-        </form>
+        </div>
       </div>
-
-
-      <div class="history"></div>
     </div>
   </div>
-  {% endverbatim %}
-  <script src="{% static 'main.js' %}"></script>
+
+  <script src="/static/main.js"></script>
 </body>
 </html>
+{% endverbatim %}
