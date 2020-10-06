@@ -84,7 +84,7 @@ curl -X POST 'http://rrrrs09.pythonanywhere.com/shorten/' \
 - _"already_exists"_ - _"This slug is already in use."_;
 - _"max_length"_ - _"Ensure this value has at most 50 characters (it has 57)."_
 
-# Установка
+# Запуск проекта
 
 Для запуска локально должны быть установлены:
 - docker
