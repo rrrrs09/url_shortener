@@ -1,17 +1,33 @@
+
 const baseUrl = window.location.protocol + '//' + window.location.host
+const api_errors = {
+    url: {
+        invalid: 'Введен некоректный url.',
+        required: 'Поле не должно быть пустым.',
+        service_url: 'Эта ссылка уже является сокращенной.'
+    },
+    slug: {
+        invalid: 'Короткое название может содержать только буквы, цифры, нижние подчеркивания или тире.',
+        already_exists: 'Такое название уже занято.',
+        max_length: 'Короткое название может содержать не более 50 символов.'
+    }
+}
+
 
 var vm = new Vue({
     el: '#app',
     data: {
-        longUrl: null,
-        slug: null,
-        shortenedUrl: null,
-        urlError: null,
-        slugError: null,
+        longUrl: '',
+        slug: '',
+        errors: {
+            url: [],
+            slug: []
+        },
         actionHistory: []
     },
     methods: {
         shortenUrl: async function (){
+            this.resetErrors()
             const requestOptions = {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -34,26 +50,23 @@ var vm = new Vue({
                 error = await response.json()
                 this.handleError(error)
             } else {
-                alert("Ошибка. Попробуйте выполнить запрос позже")
+                alert("Ошибка. Попробуйте перезагрузить страницу и выполнить запрос снова")
             };
         },
-        handleError: function (error){
-            switch (error.error.code) {
-                case "url_is_required":
-                    this.urlError = "Поле не должно быть пустым."
-                    break;
-                case "invalid_url":
-                    this.urlError = "Введен некоректный url."
-                    break;
-                case "invalid_slug":
-                    this.slugError = "Короткое название может содержать только " +
-                        "буквы, цифры нижние подчеркивания или тире и быть не больше 50 символов."
-                        break;
-                case "slug_already_exists":
-                    this.slugError = "Такое название уже занято."
-                    break;
-                default:
-                    break;
+        getFieldErrors: function (fields, fieldName){
+            for (error of fields[fieldName]) {
+                this.errors[fieldName].push(
+                    api_errors[fieldName][error.code]
+                )
+            }
+        },
+        handleError: function (error_data){
+            fields = error_data.errors
+            if ('url' in fields) {
+                this.getFieldErrors(fields, 'url')
+            }
+            if ('slug' in fields) {
+                this.getFieldErrors(fields, 'slug')
             }
         },
         addToHistory: function (urlObject){
@@ -74,11 +87,18 @@ var vm = new Vue({
             copyButton = event.target
             copyButton.className = "btn btn-secondary"
             copyButton.innerHTML = "Скопировано"
-            setTimeout(this.changeClass, 1400, copyButton)
+
+            function changeClass() {
+                copyButton.className = "btn btn-light"
+                copyButton.innerHTML = "Скопировать"
+            }
+            setTimeout(changeClass, 1400)
         },
-        changeClass: function (elem) {
-            elem.className = "btn btn-light"
-            elem.innerHTML = "Скопировать"
+        resetErrors: function() {
+            this.errors = {
+                url: [],
+                slug: []
+            }
         }
     },
     beforeMount: function() {
