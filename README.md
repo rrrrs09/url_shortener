@@ -10,6 +10,7 @@ http://rrrrs09.pythonanywhere.com/
 # Использование
 
 Конечная точка `/shorten/`  
+Метод `POST`  
 Тип данных `application/json`
 
 ### Запрос
