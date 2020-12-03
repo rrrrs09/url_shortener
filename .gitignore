@@ -4,5 +4,6 @@ __pycache__
 db.sqlite3
 .DS_Store
 .vscode
-# .env*
+.env-db
+.env-prod
 postgres_data

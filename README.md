@@ -104,6 +104,8 @@ curl -X POST 'http://rrrrs09.pythonanywhere.com/shorten/' \
 
 ## Сборка для деплоя
 
+Создать файлы .env-db и .env-prod в /env с указанием переменных для Postgres или использовать образцы.
+
 Запуск производится с помощью команды:
 
     docker-compose -f docker-compose.prod.yml up

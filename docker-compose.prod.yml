@@ -6,7 +6,7 @@ services:
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
     env_file:
-      - ./.env.db
+      - ./env/.env-db
     restart: always
 
   app:
@@ -21,7 +21,7 @@ services:
     depends_on:
       - db
     env_file:
-      - ./.env.prod
+      - ./env/.env-prod
     restart: always
 
   nginx:
