@@ -99,6 +99,10 @@ curl -X POST 'http://rrrrs09.pythonanywhere.com/shorten/' \
 
     docker-compose -f docker-compose.dev.yml up
 
+Далее применить миграции
+
+    docker-compose -f docker-compose.dev.yml exec app python manage.py migrate --settings=backend.settings.development
+
 Далее необходимо перейти по адресу [127.0.0.1:8000](http://127.0.0.1:8000)  
 При таком запуске будет использоваться встроенный Django сервер и СУБД sqlite3
 
